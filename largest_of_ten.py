@@ -76,7 +76,6 @@ def program():
         except ValueError:
             print('Please enter only integers')
 
-
     # Retaining only odd numbers
     if (N1%2 != 0) or (N1 == 1):
         N1 = N1
@@ -154,7 +153,6 @@ def program():
         print('N10 (' + str(N10) + ') is the largest odd number')
     else:
         print('No number is odd!')
-
 
 program()
 
