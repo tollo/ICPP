@@ -26,6 +26,9 @@ def program():
         if d['Integer_{0}'.format(x)] > largest_number:
             largest_number = d['Integer_{0}'.format(x)]
 
-    print('The largest odd number entered is: ' + str(largest_number))
+    if largest_number == False:
+        print('No number is odd')
+    else:
+        print('The largest odd number entered is: ' + str(largest_number))
 
 program()
