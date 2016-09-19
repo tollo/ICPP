@@ -5,7 +5,6 @@ import datetime
 
 
 class Person(object):
-
     def __init__(self, name):
         """Create a person"""
         self.name = name
@@ -36,26 +35,175 @@ class Person(object):
         return (datetime.date.today() - self.birthday).days
 
     def __lt__(self, other):
-        """Returns True if self's name is lxicographically
+        """Returns True if self's name is lexicographically
            less than other's name, and False otherwise"""
         if self.lastName == other.lastName:
             return self.name < other.name
         return self.lastName < other.lastName
 
     def __str__(self):
+
         """Returns self's name"""
         return self.name
 
-me = Person('Pepito Perez')
-him = Person('John Doe')
-her = Person('Kelly')
-print(him.getLastName())
-him.setBirthday(datetime.date(1984, 4, 16))
-her.setBirthday(datetime.date(1977, 2, 25))
-print(him.getName(), 'is', him.getAge(), 'days old')
-pList = [me, him, her]
-for p in pList:
-    print(p)
-pList.sort()
-for p in pList:
-    print(p)
+
+class MITPerson(Person):
+
+    nextIdNum = 0  # Identification Number
+
+    def __init__(self, name):
+        Person.__init__(self, name)
+        self.idNum = MITPerson.nextIdNum
+        MITPerson.nextIdNum += 1
+
+    def getIdNum(self):
+        return self.idNum
+
+    def isStudent(self):
+        return isinstance(self, Student)
+
+    def __lt__(self, other):
+        return self.idNum < other.idNum
+
+
+class Student(MITPerson):
+
+    pass
+
+
+class UG(Student):
+
+    def __init__(self, name, classYear):
+        MITPerson.__init__(self, name)
+        self.year = classYear
+
+    def getClass(self):
+        return self.year
+
+
+class Grad(Student):
+
+    pass
+
+
+class TransferStudent(Student):
+
+    def __init__(self, name, fromSchool):
+        MITPerson.__init__(self, name)
+        self.fromSchool = fromSchool
+
+    def getOldSchool(self):
+        return self.fromSchool
+
+
+class Grades(object):
+    """A mapping from students to a list of grades"""
+    def __init__(self):
+        """Create empty grade book"""
+        self.students = []
+        self.grades = {}
+        self.isSorted = True
+
+    def addStudent(self, student):
+        """Assumes: student is of type Student
+           Add student to the grade book"""
+        if student in self.students:
+            raise ValueError('Duplicate student')
+        self.students.append(student)
+        self.grades[student.getIdNum()] = []
+        self.isSorted = False
+
+    def addGrade(self, student, grade):
+        """Assumes: grade is a float
+           Add grade to the list of grades for student"""
+        try:
+            self.grades[student.getIdNum()].append(grade)
+        except:
+            raise ValueError('Student not in mapping')
+
+    def getGrades(self, student):
+        """Return a list of grades for student"""
+        try:  # return copy of students grades
+            return self.grades[student.getIdNum()][:]
+        except:
+            raise ValueError('Student not in mapping')
+
+    def getStudents(self):
+        """Return a list of the students in the grade book"""
+        if not self.isSorted:
+            self.students.sort()
+            self.isSorted = True
+        for s in self.students:
+            yield s
+
+
+def gradeReport(course):
+    """Assumes course is of type Grades"""
+    report = ''
+    for s in course.getStudents():
+        tot = 0.0
+        numGrades = 0
+        for g in course.getGrades(s):
+            tot += g
+            numGrades += 1
+        try:
+            average = tot / numGrades
+            report = report + '\n'\
+                            + str(s) + '\'s mean grade is ' + str(average)
+        except ZeroDivisionError:
+            report = report + '\n'\
+                     + str(s) + ' has no grades'
+    return report
+
+ug1 = UG('Jane Doe', 2014)
+ug2 = UG('John Doe', 2015)
+ug3 = UG('David Henry', 2003)
+g1 = Grad('Billy Buckner')
+g2 = Grad('Bucky F. Dent')
+sixHundred = Grades()
+sixHundred.addStudent(ug1)
+sixHundred.addStudent(ug2)
+sixHundred.addStudent(g1)
+sixHundred.addStudent(g2)
+for s in sixHundred.getStudents():
+    sixHundred.addGrade(s, 75)
+sixHundred.addGrade(g1, 25)
+sixHundred.addGrade(g2, 100)
+sixHundred.addStudent(ug3)
+print(gradeReport(sixHundred))
+
+
+# me = Person('Pepito Perez')
+# him = Person('John Doe')
+# her = Person('Kelly')
+# print(him.getLastName())
+# him.setBirthday(datetime.date(1984, 4, 16))
+# her.setBirthday(datetime.date(1977, 2, 25))
+# print(him.getName(), 'is', him.getAge(), 'days old')
+# pList = [me, him, her]
+# for p in pList:
+#     print(p)
+# pList.sort()
+# for p in pList:
+#     print(p)
+#
+# p1 = MITPerson('Sally Smith')
+# print(str(p1) + '\'s id number is ' + str(p1.getIdNum()))
+#
+# p1 = MITPerson('Bob Smith')
+# p2 = MITPerson('Joe Brown')
+# p3 = MITPerson('Joe Brown')
+# p4 = Person('Joe Brown')
+#
+# p# rint('p1 < p2 =', p1 < p2)
+# print('p3 < p2 =', p3 < p2)
+# print('p4 < p1 =', p4 < p1)
+#
+# p5 = Grad('Bill Hunt')
+# p6 = UG('Fred Mo', 1973)
+# print(p5, 'is a graduate student', type(p5) == Grad)
+# print(p5, 'is an undergraduate student is', type(p5) == UG)
+#
+# print(p5, 'is a student is', p5.isStudent())
+# print(p6, 'is a student is', p6.isStudent())
+# print(p3, 'is a student is', p3.isStudent())
