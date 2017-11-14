@@ -1,3 +1,3 @@
-# pythonfiles
+# Read Me
 
-Learning Python
+Exercises from "Introduction to Computing and Programming using Python"
