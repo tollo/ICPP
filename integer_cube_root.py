@@ -1,16 +1,29 @@
-# Find the cube root of an integer by exhaustive enumeration
-#
-x = int(input('Enter an integer: '))
+# integer_cube_root.py
+""" Find the cube root of an integer by exhaustive enumeration
+    Example from Introduction to Computing and Programming using Python"""
 
-ans = 0
+def main():
+    """ Main program"""
 
-while ans**3 < abs(x):
-    ans = ans + 1
+    while True:
+        try:
+            input_value = int(input('Enter an integer: '))
+            break
+        except ValueError:
+            print('Please enter only integers')
 
-if ans**3 != abs(x):
-    print(x, 'is not a perfect cube')
+    ans = 0
 
-else:
-    if x < 0:
-        ans = -ans
-    print('Cube root of', x, 'is', ans)
+    while ans**3 < abs(input_value):
+        ans = ans + 1
+
+    if ans**3 != abs(input_value):
+        print(input_value, 'is not a perfect cube')
+
+    else:
+        if input_value < 0:
+            ans = -ans
+        print('Cube root of', input_value, 'is', ans)
+
+
+main()
