@@ -1,9 +1,9 @@
 # Introduction to Computing and Programming using Python
-# Example of classes
+"""Example of classes and methods"""
 
 
 class IntSet(object):
-    """An intSet is a set of integers"""
+    """An IntSet is a set of integers"""
     # Information about the implementation (not the abstraction)
     # The value of the set is represented by a list of ints, self.vals.
     # Each int in the set occurs in self.vals exactly once.
@@ -30,7 +30,7 @@ class IntSet(object):
         except:
             raise ValueError(str(e) + ' not found')
 
-    def getMembers(self):
+    def get_members(self):
         """Returns a list containing the elements of self.
         Nothing can be assumed about the order of the elements"""
         return self.vals[:]
